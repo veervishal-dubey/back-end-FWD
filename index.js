@@ -182,8 +182,9 @@ app.post("/login", async (req, res) => {
     }
 
     const user = auth[0];
+
     if (user.password !== password) {
-      return res.status(410).json({ error: "Wrong Password Entered." });
+      return res.status(401).json({ error: "Wrong Password" });
     }
 
     const token = jwt.sign(
@@ -195,9 +196,11 @@ app.post("/login", async (req, res) => {
     res.json({ message: "Login Successful", token });
 
   } catch (err) {
-    res.status(500).json({ error: "Database error" });
+    console.error("LOGIN ERROR:", err);
+    res.status(500).json({ error: err.message });
   }
 });
+
 
 app.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
